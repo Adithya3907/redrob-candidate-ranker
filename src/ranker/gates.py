@@ -182,16 +182,24 @@ def _check_nontechnical_title(candidate: dict[str, Any]) -> bool:
 def _check_below_experience_floor(candidate: dict[str, Any]) -> bool:
     return candidate["profile"]["years_of_experience"] < config.MIN_YEARS_EXPERIENCE_HARD_FLOOR
 
+def _check_pure_research_only(candidate: dict[str, Any], career_text: str) -> bool:
+    if "Research" not in candidate["profile"]["current_title"]:
+        return False
+    text = career_text.lower()
+    return not any(verb in text for verb in config.IMPACT_VERBS)
 
-def run_jd_hard_disqualifier_checks(candidate: dict[str, Any]) -> tuple[bool, list[str]]:
+def run_jd_hard_disqualifier_checks(candidate: dict[str, Any], career_text: str) -> tuple[bool, list[str]]:
     reasons = []
-
+    if _check_pure_research_only(candidate, career_text):
+        reasons.append("pure_research_only")
     if _check_consulting_only(candidate):
         reasons.append("consulting_only")
     if _check_nontechnical_title(candidate):
         reasons.append("nontechnical_title")
     if _check_below_experience_floor(candidate):
         reasons.append("below_experience_floor")
+
+    return (len(reasons) > 0, reasons)
 
     # cv_speech_robotics_without_ir is deliberately NOT a hard gate -- see
     # run_soft_flag_checks below. It stays soft until independently validated
@@ -276,7 +284,7 @@ def evaluate_gates(
     candidate: dict[str, Any], career_text: str, today: date | None = None
 ) -> GateResult:
     is_honeypot, honeypot_reasons = run_structural_honeypot_checks(candidate, today)
-    is_disqualified, disqualifier_reasons = run_jd_hard_disqualifier_checks(candidate)
+    is_disqualified, disqualifier_reasons = run_jd_hard_disqualifier_checks(candidate, career_text)
     soft_penalty, soft_flags = run_soft_flag_checks(candidate, career_text)
 
     return GateResult(

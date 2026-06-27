@@ -1,0 +1,13 @@
+candidates.jsonl 
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+
+# OS / editor noise
+.DS_Store
+.vscode/
+.idea/

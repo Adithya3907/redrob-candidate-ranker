@@ -1,0 +1,29 @@
+# Redrob Hackathon -- Candidate Ranking System
+# Pin versions for Stage 3 reproducibility. Verify exact versions resolve cleanly
+# with `pip install -r requirements.txt` in your actual build environment before
+# baking this into the Dockerfile -- package availability drifts over time.
+
+# Core data handling
+pandas>=2.2,<2.3
+numpy>=1.26,<2.0
+python-dateutil>=2.9,<2.10
+
+# Storage + retrieval (Phase A-4, Stage B-1 through B-4)
+lancedb>=0.13,<0.14
+tantivy>=0.22,<0.23        # FTS engine LanceDB uses internally; pin explicitly anyway
+
+# Embeddings + reranking (Stage A-3, Stage B-6)
+sentence-transformers>=3.0,<3.1
+torch>=2.2,<2.5             # CPU-only build: see Dockerfile for the +cpu index url
+
+# Honeypot / evidence keyword matching (Stage A-1, Stage B-10)
+flashtext>=2.7,<2.8
+
+# Offline weight tuning ONLY -- never imported by rank.py, used only in research/
+optuna>=3.6,<3.7
+
+# CSV / schema validation
+pydantic>=2.7,<2.8
+
+# Sandbox demo only -- not used by rank.py or scripts/build_index.py
+streamlit>=1.38,<1.39

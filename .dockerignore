@@ -1,0 +1,13 @@
+# candidates.jsonl is intentionally NOT excluded here -- the Dockerfile's
+# build-time RUN step needs it present in the build context. It IS excluded
+# from git (see .gitignore); those are two different concerns.
+
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.git/
+.gitignore
+artifacts/
+*.md
+research/

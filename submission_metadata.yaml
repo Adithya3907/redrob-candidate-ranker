@@ -1,0 +1,81 @@
+# Redrob Hackathon -- Submission Metadata
+# Fill in every field marked TODO before submitting.
+
+team_name: "TODO"
+
+primary_contact:
+  name: "TODO"
+  email: "TODO"
+  phone: "TODO"
+
+team_members:
+  - name: "TODO"
+    email: "TODO"
+    role: "TODO"
+
+# ============================================================================
+# Code and reproducibility
+# ============================================================================
+github_repo: "TODO: https://github.com/YOUR_USERNAME/YOUR_REPO"
+
+sandbox_link: "TODO"
+
+reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
+
+# ============================================================================
+# Compute environment
+# ============================================================================
+compute:
+  platform: "TODO"
+  cpu_cores: "TODO"
+  ram_gb: 16
+  python_version: "3.11"
+  os: "TODO"
+  uses_gpu_for_inference: false
+  has_network_during_ranking: false
+  pre_computation_required: true
+  pre_computation_time_minutes: "TODO: time scripts/build_index.py on your machine"
+
+# ============================================================================
+# AI tools declaration
+# ============================================================================
+ai_tools_used:
+  - "Claude"
+
+ai_usage_summary: |
+  TODO -- be specific and honest. Example shape:
+  "Used Claude for architecture design, code review, and debugging throughout
+  development. No candidate data was sent to any LLM at ranking time -- the
+  reasoning generator uses controlled f-string templates with FlashText-detected
+  keywords only, never a live model call."
+
+# ============================================================================
+# Approach summary
+# ============================================================================
+methodology_summary: |
+  Two-phase pipeline. Phase A (offline, no time limit): streams the 100K
+  candidate pool, runs deterministic honeypot and JD-disqualifier gates,
+  extracts structured features plus two text columns, computes BGE-small
+  embeddings, writes to LanceDB with FTS and vector indexes built on top.
+  Phase B (online, <=5 min): dual-channel FTS + vector recall against
+  evidence-of-work vocabulary (not tool names), a deterministic shortlist
+  cap, dual-pass cross-encoder reranking against separate technical and
+  cultural JD chunks, 4-group behavioral scoring (availability, reliability,
+  market demand, platform trust) with Optuna-tuned weights, and a final
+  composite with proportional role-fit multipliers (experience band,
+  product-company ratio, education tier, tenure, shipper-verb evidence).
+  Reasoning is generated from controlled templates citing only structured
+  fields and FlashText-detected keywords -- never free text copied from a
+  candidate's own summary. Honeypots and JD hard disqualifiers are detected
+  deterministically offline and excluded via a zero-cost filter on every
+  online query, never scored by the tuned weights.
+
+# ============================================================================
+# Declarations
+# ============================================================================
+declarations:
+  read_submission_spec: true
+  code_is_original_work: true
+  no_collusion: true
+  honeypot_check_done: true
+  reproduction_tested: "TODO: set true only after you have actually run both commands end to end yourself"

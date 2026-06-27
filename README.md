@@ -52,15 +52,11 @@ Full design rationale, stage-by-stage data flow, and known limitations are in
 
 ## Quick start
 
-Prerequisite: Local reproduction of this pipeline (both Phase A index building and Phase B ranking) requires Python 3.12. For the official Stage 3 automated evaluation, please use the Docker instructions at the bottom of this document.
-
-
+> **Prerequisite:** Local reproduction of this pipeline (both Phase A index building and Phase B ranking) requires **Python 3.12**. For the official Stage 3 automated evaluation, please use the Docker instructions at the bottom of this document.
 
 ```bash
-git clone https://github.com/Adithya3907/redrob-candidate-ranker
+git clone [https://github.com/Adithya3907/redrob-candidate-ranker](https://github.com/Adithya3907/redrob-candidate-ranker)
 cd redrob-candidate-ranker
-python -m venv .venv \&\& source .venv/bin/activate
-pip install -r requirements.txt
 ```
 
 Download `candidates.zip` and place it in the repository root.
@@ -68,22 +64,29 @@ Download `candidates.zip` and place it in the repository root.
 ### Windows (PowerShell)
 
 ```powershell
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
 Expand-Archive -Path candidates.zip -DestinationPath . -Force
 ```
 
 ### Linux / macOS
 
 ```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
 unzip candidates.zip
 ```
+
+### 🚀 Execute the Pipeline
 
 ```bash
 # 1. Online ranking (the timed, official reproduction command)
 python rank.py --candidates ./candidates.jsonl --out ./WhiteNoise.csv
 
-# \[Verification Steps]
-# 2. Offline pre-build (takes \~25 mins on GPU if rebuilding artifacts):
-#    python scripts/build\_index.py --candidates ./candidates.jsonl
+# [Verification Steps]
+# 2. Offline pre-build (takes ~25 mins on GPU if rebuilding artifacts):
+#    python scripts/build_index.py --candidates ./candidates.jsonl
 ```
 
 ## Project structure

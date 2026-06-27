@@ -84,10 +84,8 @@ def run_pipeline(table) -> list[RankedCandidate]:
     previous_score = None 
 
     for rank, (feature_row, score) in enumerate(top_100, start=1):
-        # Ensure the score never exceeds 0.985 and strictly strictly flows downward
-        ABSOLUTE_MAX = 0.985
-        safe_score = min(ABSOLUTE_MAX, score)
-        clamped_score = safe_score if previous_score is None else min(safe_score, previous_score)
+       
+        clamped_score = score if previous_score is None else min(score, previous_score)
 
         composed = composed_by_id[feature_row.candidate_id]
         reasoning_text = generate_reasoning(

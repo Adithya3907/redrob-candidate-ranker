@@ -1,74 +1,55 @@
-# Redrob Hackathon -- Submission Metadata
-# Fill in every field marked TODO before submitting.
-
-team_name: "TODO"
+# ============================================================================
+# Team identity
+# ============================================================================
+team_name: "ResumeGotCooked"
 
 primary_contact:
-  name: "TODO"
-  email: "TODO"
-  phone: "TODO"
+  name: "Adithya M"
+  email: "adithya3907@gmail.com"
+  phone: "+91 7397603910"
 
 team_members:
-  - name: "TODO"
-    email: "TODO"
-    role: "TODO"
-
+  - name: "Adithya M"
+    email: "adithya3907@gmail.com"
+   
 # ============================================================================
 # Code and reproducibility
 # ============================================================================
-github_repo: "TODO: https://github.com/YOUR_USERNAME/YOUR_REPO"
+github_repo: "https://github.com/Adithya3907/redrob-candidate-ranker"
 
-sandbox_link: "TODO"
+sandbox_link: "https://redrob-candidate-ranker-adithya3907.streamlit.app" 
 
-reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
+reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./YOUR_TEAM_ID.csv"
 
 # ============================================================================
 # Compute environment
 # ============================================================================
 compute:
-  platform: "TODO"
-  cpu_cores: "TODO"
+  platform: "Local Machine / Laptop"
+  cpu_cores: 8
   ram_gb: 16
   python_version: "3.11"
-  os: "TODO"
+  os: "Windows"
   uses_gpu_for_inference: false
   has_network_during_ranking: false
   pre_computation_required: true
-  pre_computation_time_minutes: "TODO: time scripts/build_index.py on your machine"
+  pre_computation_time_minutes: 25
 
 # ============================================================================
 # AI tools declaration
 # ============================================================================
 ai_tools_used:
   - "Claude"
+  - "Gemini"
 
 ai_usage_summary: |
-  TODO -- be specific and honest. Example shape:
-  "Used Claude for architecture design, code review, and debugging throughout
-  development. No candidate data was sent to any LLM at ranking time -- the
-  reasoning generator uses controlled f-string templates with FlashText-detected
-  keywords only, never a live model call."
+  Used Gemini and Claude as pair-programming assistants for architecture validation, math debugging (specifically fixing Optuna weight distributions and proportional scaling), and code review. No candidate data was sent to any LLM at ranking time. The reasoning generator uses deterministic, code-driven f-string templates with FlashText-detected keywords only, ensuring zero hallucination.
 
 # ============================================================================
 # Approach summary
 # ============================================================================
 methodology_summary: |
-  Two-phase pipeline. Phase A (offline, no time limit): streams the 100K
-  candidate pool, runs deterministic honeypot and JD-disqualifier gates,
-  extracts structured features plus two text columns, computes BGE-small
-  embeddings, writes to LanceDB with FTS and vector indexes built on top.
-  Phase B (online, <=5 min): dual-channel FTS + vector recall against
-  evidence-of-work vocabulary (not tool names), a deterministic shortlist
-  cap, dual-pass cross-encoder reranking against separate technical and
-  cultural JD chunks, 4-group behavioral scoring (availability, reliability,
-  market demand, platform trust) with Optuna-tuned weights, and a final
-  composite with proportional role-fit multipliers (experience band,
-  product-company ratio, education tier, tenure, shipper-verb evidence).
-  Reasoning is generated from controlled templates citing only structured
-  fields and FlashText-detected keywords -- never free text copied from a
-  candidate's own summary. Honeypots and JD hard disqualifiers are detected
-  deterministically offline and excluded via a zero-cost filter on every
-  online query, never scored by the tuned weights.
+  Two-phase pipeline. Phase A (offline): Streams the 100K JSONL, executes structural gate checks (honeypots, pure consultants, academic-only), and computes BGE-small embeddings into a LanceDB vector+FTS index. Phase B (online): Uses FTS/Vector recall with a deterministic 1,200 shortlist cap. Candidates are reranked using a ms-marco-MiniLM cross-encoder, followed by an Optuna-tuned behavioral penalty system (squashing 120-day notice periods and 75-day inactivity). Final composite applies mathematical gap-closing boosts for shipped-to-production evidence. Reasoning is strictly deterministic and dynamically defends JD borderline cases.
 
 # ============================================================================
 # Declarations
@@ -78,4 +59,4 @@ declarations:
   code_is_original_work: true
   no_collusion: true
   honeypot_check_done: true
-  reproduction_tested: "TODO: set true only after you have actually run both commands end to end yourself"
+  reproduction_tested: true

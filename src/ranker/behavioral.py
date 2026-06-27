@@ -96,10 +96,6 @@ def score_behavioral(
     weight_market_demand: float = config.BEHAVIORAL_WEIGHT_MARKET_DEMAND,
     weight_platform_trust: float = config.BEHAVIORAL_WEIGHT_PLATFORM_TRUST,
 ) -> BehavioralScore:
-    """Optional weight_* parameters let research/tune_weights.py evaluate
-    candidate trial weights directly, without mutating module-level config
-    state. The online pipeline never passes these, so it always uses the
-    constants in config.py."""
     availability = availability_score(row)
     reliability = reliability_score(row)
     market_demand = market_demand_score(row)
@@ -111,6 +107,14 @@ def score_behavioral(
         + weight_market_demand * market_demand
         + weight_platform_trust * platform_trust
     )
+    
+    if row.notice_days > 90:
+        raw *= 0.65  
+
+    if row.last_active_days_ago > 75:
+        raw *= 0.70
+   
+
     sigmoid = 1.0 / (
         1.0
         + math.exp(

@@ -84,7 +84,15 @@ def compose_score(
         final_relevance_weight * rerank_result.ce_score
         + final_behavioral_weight * behavioral.behavioral_score
     )
-    final_score = base * exp_mult * pc_mult * edu_mult * t_mult * impact_mult
+    
+    # 1. Apply all penalties first (guaranteed to be <= 1.0)
+    raw_penalized = base * exp_mult * pc_mult * edu_mult * t_mult
+    
+    # 2. Apply the impact boost as a "gap closer" to 1.0, not an unbounded multiplier.
+    impact_bonus = (1.0 - raw_penalized) * (impact_mult - 1.0)
+    
+    # 3. Final calculation
+    final_score = raw_penalized + impact_bonus
     final_score = max(0.0, final_score - soft_penalty * config.SOFT_PENALTY_SCALE)
 
     return ComposedScore(

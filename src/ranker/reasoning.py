@@ -138,9 +138,9 @@ _BORDERLINE_TITLE_MARKERS = ("Research", "Computer Vision")
 
 # Add the explicit IT Services list that the JD warns against
 _SERVICES_FIRMS = {
-    "TCS", "Infosys", "Wipro", "Accenture", 
-    "Cognizant", "Capgemini", "Genpact AI", 
-    "Tech Mahindra", "HCL", "Mindtree"
+    "TCS", "Infosys", "Wipro", "Accenture", "Cognizant", "Capgemini",
+    "HCL", "Mphasis", "Tech Mahindra", "Hexaware", "LTIMindtree", 
+    "Genpact", "Mindtree", "Genpact AI" 
 }
 
 def _borderline_defense_clause(row: FeatureRow) -> str | None:
@@ -170,10 +170,10 @@ def generate_reasoning(context: ReasoningContext) -> str:
     found_cultural = _CULTURAL_PROCESSOR.extract_keywords(row.career_text)
 
     evidence = _strongest_technical_evidence(found_technical)
-    if evidence == _DEFAULT_EVIDENCE:
-        defense_clause = _borderline_defense_clause(row)
-        if defense_clause:
-            evidence = defense_clause
+    
+    defense = _borderline_defense_clause(row)
+    if defense:
+        evidence = f"{defense}; {evidence}"
 
     if row.longest_tenure_years >= 3.0:
         cultural_note = f"; {row.longest_tenure_years:.0f}y+ tenure at one employer"

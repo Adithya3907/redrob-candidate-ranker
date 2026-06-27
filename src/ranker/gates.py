@@ -205,9 +205,6 @@ def run_jd_hard_disqualifier_checks(candidate: dict[str, Any], career_text: str)
     # run_soft_flag_checks below. It stays soft until independently validated
     # against a larger sample; see config.py and ARCHITECTURE.md Section 4.
 
-    return (len(reasons) > 0, reasons)
-
-
 # ---------------------------------------------------------------------------
 # Soft flags -- penalties, never exclusions
 # ---------------------------------------------------------------------------

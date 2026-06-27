@@ -45,7 +45,15 @@ def availability_score(row: FeatureRow) -> float:
         + config.AVAILABILITY_NOTICE_WEIGHT * _notice_score(row.notice_days)
         + config.AVAILABILITY_OPEN_TO_WORK_WEIGHT * open_to_work_score
     )
-    return base * _location_multiplier(row)
+    availability = base * _location_multiplier(row)
+    
+    # Apply hard cliffs strictly to availability, not the overall raw score
+    if row.notice_days > config.NOTICE_HARD_CLIFF_DAYS:
+        availability *= config.NOTICE_HARD_CLIFF_MULTIPLIER
+    if row.last_active_days_ago > config.RECENCY_HARD_CLIFF_DAYS:
+        availability *= config.RECENCY_HARD_CLIFF_MULTIPLIER
+        
+    return availability
 
 
 def reliability_score(row: FeatureRow) -> float:
@@ -107,13 +115,6 @@ def score_behavioral(
         + weight_market_demand * market_demand
         + weight_platform_trust * platform_trust
     )
-    
-    if row.notice_days > 90:
-        raw *= 0.65  
-
-    if row.last_active_days_ago > 75:
-        raw *= 0.70
-   
 
     sigmoid = 1.0 / (
         1.0

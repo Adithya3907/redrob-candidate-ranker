@@ -208,6 +208,11 @@ BEHAVIORAL_WEIGHT_RELIABILITY = 0.5996    # [OPTUNA-TUNED] placeholder
 BEHAVIORAL_WEIGHT_MARKET_DEMAND = 0.0598  # [OPTUNA-TUNED] placeholder
 BEHAVIORAL_WEIGHT_PLATFORM_TRUST = 0.2250 # [OPTUNA-TUNED] placeholder
 
+NOTICE_HARD_CLIFF_DAYS = 90
+NOTICE_HARD_CLIFF_MULTIPLIER = 0.65
+RECENCY_HARD_CLIFF_DAYS = 75
+RECENCY_HARD_CLIFF_MULTIPLIER = 0.70
+
 # Within-group sub-weights (hand-set design choices -- defend these as design
 # decisions, not as something Optuna chose; only the 4 weights above are
 # in scope for tuning, to keep the search space small relative to the 51-row
@@ -288,8 +293,8 @@ IMPACT_VERBS = (
     "released to production", "took to production",
     "drove to launch", "pushed to prod",
 )
-IMPACT_VERB_STEP = 0.05
-IMPACT_VERB_MAX_COUNT = 4            # caps the multiplier at 1.05
+IMPACT_VERB_STEP = 0.05     
+IMPACT_VERB_MAX_COUNT = 4            
 
 # Output contract (Stage 11 / validate_submission.py)
 OUTPUT_COLUMNS = ["candidate_id", "rank", "score", "reasoning"]

@@ -14,7 +14,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from flashtext import KeywordProcessor
-
+from . import config
 from .compose import ComposedScore
 from .features import FeatureRow
 
@@ -133,29 +133,16 @@ class ReasoningContext:
 
 _BORDERLINE_TITLE_MARKERS = ("Research", "Computer Vision")
 
-
-_BORDERLINE_TITLE_MARKERS = ("Research", "Computer Vision")
-
-# Add the explicit IT Services list that the JD warns against
-_SERVICES_FIRMS = {
-    "TCS", "Infosys", "Wipro", "Accenture", "Cognizant", "Capgemini",
-    "HCL", "Mphasis", "Tech Mahindra", "Hexaware", "LTIMindtree", 
-    "Genpact", "Mindtree", "Genpact AI" 
-}
-
 def _borderline_defense_clause(row: FeatureRow) -> str | None:
-    """Generates an explicit defense for candidates whose current title or company
-    superficially resembles a disqualified pattern but who passed the gates
-    legitimately."""
-    
-    # 1. Defend the IT Services candidates
-    if any(firm.lower() in row.current_company.lower() for firm in _SERVICES_FIRMS):
-        return (
-            f"currently at {row.current_company}, but career history validates "
-            f"prior product-scale deployment"
-        )
-
-    # 2. Defend the Computer Vision / Research candidates
+    # Use the single source of truth from config, and verify real product tenure
+    if any(firm.lower() in row.current_company.lower() for firm in config.CONSULTING_COMPANIES):
+        if row.product_company_ratio >= 0.5:
+            return (
+                f"currently at {row.current_company}, but {row.product_company_ratio:.0%} "
+                f"of career history is at product companies"
+            )
+        return None  # don't assert what the data doesn't support
+        
     if any(marker in row.current_title for marker in _BORDERLINE_TITLE_MARKERS):
         if row.impact_verb_count > 0:
             return f"currently {row.current_title}, but career history shows shipped production evidence"

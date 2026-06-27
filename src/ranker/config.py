@@ -73,7 +73,7 @@ NONTECHNICAL_TITLES = {
 # present as real company names in this dataset.
 CONSULTING_COMPANIES = {
     "TCS", "Infosys", "Wipro", "Accenture", "Cognizant", "Capgemini",
-    "HCL", "Mphasis", "Tech Mahindra", "Hexaware", "LTIMindtree",
+    "HCL", "Mphasis", "Tech Mahindra", "Hexaware", "LTIMindtree","Genpact","Mindtree",
 }
 
 # JD-preferred locations (soft signal, never a hard gate -- JD explicitly says

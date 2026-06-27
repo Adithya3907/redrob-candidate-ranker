@@ -69,7 +69,7 @@ outside the timed window.
                     │                                            │
                     └────────────────────┬───────────────────────┘
                                          │
-                                  submission.csv
+                                  WhiteNoise.csv
                                   (top 100, ranked)
 ```
 

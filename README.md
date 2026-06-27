@@ -133,7 +133,7 @@ streamlit run sandbox/app.py
 
 This pipeline uses an **Offline-Build, Online-Rank** architecture to strictly adhere to the 5-minute, CPU-only, and no-network constraints.
 
-Because embedding 100,000 candidates takes \~25 minutes, the heavy dense embeddings and LanceDB index generation (Phase A) are baked directly into the Docker build step. The timed ranking execution (Phase B) runs entirely offline.
+Because embedding 100,000 candidates takes \~25 minutes on GPU, the heavy dense embeddings and LanceDB index generation (Phase A) are baked directly into the Docker build step. The timed ranking execution (Phase B) runs entirely offline.
 
 ### Prerequisites
 
@@ -146,7 +146,7 @@ Please ensure the official `candidates.jsonl` (465MB) file is placed in the root
 
 ### Step 2: Run the Ranker (Phase B - Timed Execution)
 
-*Note: This command strictly enforces the Stage 3 constraints (no network, 16GB RAM). It will execute the cross-encoder and output the top 100 CSV within the 5-minute window.*
+*Note: This command strictly enforces the Stage 3 constraints (no network, 16GB RAM, only CPU). It will execute the cross-encoder and output the top 100 CSV within the 5-minute window.*
 ```bash docker run --rm --network none --memory="16g" -v $(pwd):/app/output whitenoise-ranker ```
 *The final output will be generated in your local directory as `WhiteNoise.csv`.*
 

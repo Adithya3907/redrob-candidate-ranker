@@ -51,7 +51,7 @@ def availability_score(row: FeatureRow) -> float:
 def reliability_score(row: FeatureRow) -> float:
     speed_score = max(0.0, 1.0 - row.avg_response_hours / config.RESPONSE_SPEED_SCALE_HOURS)
     return (
-        config.RELIABILITY_RESPONSE_RATE_WEIGHT * row.recruiter_response_rate
+        config.RELIABILITY_RESPONSE_RATE_WEIGHT * (row.recruiter_response_rate ** 2)
         + config.RELIABILITY_RESPONSE_SPEED_WEIGHT * speed_score
         + config.RELIABILITY_INTERVIEW_RATE_WEIGHT * row.interview_completion_rate
         + config.RELIABILITY_OFFER_RATE_WEIGHT * row.offer_acceptance_rate_adj

@@ -1,8 +1,3 @@
-# Redrob Hackathon -- Candidate Ranking System
-# Pin versions for Stage 3 reproducibility. Verify exact versions resolve cleanly
-# with `pip install -r requirements.txt` in your actual build environment before
-# baking this into the Dockerfile -- package availability drifts over time.
-
 # Core data handling
 pandas>=2.2,<2.3
 numpy>=1.26,<2.0
@@ -27,3 +22,7 @@ pydantic>=2.7,<2.8
 
 # Sandbox demo only -- not used by rank.py or scripts/build_index.py
 streamlit>=1.38,<1.39
+
+# Streamlit
+pandas
+openpyxl

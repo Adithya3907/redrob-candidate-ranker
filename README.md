@@ -50,12 +50,12 @@ compliance with JD constraints. See
 Full design rationale, stage-by-stage data flow, and known limitations are in
 [**ARCHITECTURE.md**](ARCHITECTURE.md).
 
-## Quick start
+## Reproduce
 
 > **Prerequisite:** Local reproduction of this pipeline (both Phase A index building and Phase B ranking) requires **Python 3.12**. For the official Stage 3 automated evaluation, please use the Docker instructions at the bottom of this document.
 
 ```bash
-git clone [https://github.com/Adithya3907/redrob-candidate-ranker](https://github.com/Adithya3907/redrob-candidate-ranker)
+git clone https://github.com/Adithya3907/redrob-candidate-ranker
 cd redrob-candidate-ranker
 ```
 

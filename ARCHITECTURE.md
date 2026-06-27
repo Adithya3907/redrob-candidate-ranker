@@ -48,26 +48,26 @@ outside the timed window.
 ## 2. High-level architecture
 
 ```
-                    ┌─────────────────────────────────────────┐
+                    ┌──────────────────────────────────────────┐
                     │   PHASE A — Offline pre-build            │
                     │   No time limit · run once before submit │
-                    │                                           │
-  candidates.jsonl  │   stream → gate-check → feature-extract   │
-       ──────────►  │        → embed → write to LanceDB         │
-                    │                                           │
-                    └───────────────────┬───────────────────────┘
+                    │                                          │
+  candidates.jsonl  │   stream → gate-check → feature-extract  │
+       ──────────►  │        → embed → write to LanceDB        │
+                    │                                          │
+                    └────────────────────┬─────────────────────┘
                                          │
                                   artifacts/lancedb/
                                   (baked into the Docker image)
                                          │
-                    ┌────────────────────▼──────────────────────┐
-                    │   PHASE B — Online ranking                │
+                    ┌────────────────────▼───────────────────────┐
+                    │   PHASE B — Online ranking                 │
                     │   ≤ 5 min · ≤ 16 GB · CPU-only · no network│
                     │                                            │
                     │   recall → rerank → behavioral score       │
                     │        → composite score → reasoning       │
                     │                                            │
-                    └───────────────────┬────────────────────────┘
+                    └────────────────────┬───────────────────────┘
                                          │
                                   submission.csv
                                   (top 100, ranked)

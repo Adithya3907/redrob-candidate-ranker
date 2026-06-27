@@ -80,16 +80,14 @@ def run_pipeline(table) -> list[RankedCandidate]:
         composed = compose_score(feature_row, rerank_result, behavioral, soft_penalty)
         scored.append((feature_row, composed.final_score, composed))
 
-    ranked_pairs = _deterministic_tie_break([(row, score) for row, score, _ in scored])
+    ranked_pairs = _deterministic_tie_break([(row, round(score, 4)) for row, score, _ in scored])
     composed_by_id = {row.candidate_id: composed for row, _, composed in scored}
 
     top_100 = ranked_pairs[: config.OUTPUT_ROW_COUNT]
 
     results = []
-    previous_score = None
     for rank, (feature_row, score) in enumerate(top_100, start=1):
         clamped_score = score if previous_score is None else min(score, previous_score)
-        previous_score = clamped_score
 
         composed = composed_by_id[feature_row.candidate_id]
         reasoning_text = generate_reasoning(
@@ -104,7 +102,7 @@ def run_pipeline(table) -> list[RankedCandidate]:
             RankedCandidate(
                 candidate_id=feature_row.candidate_id,
                 rank=rank,
-                score=round(clamped_score, 4),
+                score=score,
                 reasoning=reasoning_text,
             )
         )

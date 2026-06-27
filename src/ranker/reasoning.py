@@ -117,7 +117,7 @@ def _dominant_penalty_factor(row: FeatureRow, composed: ComposedScore) -> str | 
     if composed.pc_mult < 1.0:
         candidates.append((1.0 - composed.pc_mult, "limited product-company tenure"))
     if row.impact_verb_count == 0:
-        candidates.append((0.05, "no shipped/owned/built evidence detected"))
+        candidates.append((0.35, "no shipped/owned/built evidence detected"))
 
     if not candidates:
         return None

@@ -128,7 +128,7 @@ MIN_YEARS_EXPERIENCE_HARD_FLOOR = 3.5
 SALARY_INVERSION_PENALTY = 0.4          # additive penalty to honeypot_score
 GHOST_CODER_GITHUB_THRESHOLD = 70.0
 GHOST_CODER_PENALTY = 0.4
-
+SOFT_PENALTY_SCALE = 0.5
 # too_good_to_be_true: all of profile_completeness_score, recruiter_response_rate,
 # interview_completion_rate simultaneously above these. Set to literally match
 # "above the 95th percentile" as originally specified, NOT independently

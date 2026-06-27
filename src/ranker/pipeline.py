@@ -86,7 +86,10 @@ def run_pipeline(table) -> list[RankedCandidate]:
     top_100 = ranked_pairs[: config.OUTPUT_ROW_COUNT]
 
     results = []
+    previous_score = None 
+
     for rank, (feature_row, score) in enumerate(top_100, start=1):
+        # Calculate the safe score
         clamped_score = score if previous_score is None else min(score, previous_score)
 
         composed = composed_by_id[feature_row.candidate_id]
@@ -102,9 +105,11 @@ def run_pipeline(table) -> list[RankedCandidate]:
             RankedCandidate(
                 candidate_id=feature_row.candidate_id,
                 rank=rank,
-                score=score,
+                score=clamped_score,  
                 reasoning=reasoning_text,
             )
         )
+        
+        previous_score = clamped_score
 
     return results

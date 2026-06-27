@@ -216,7 +216,7 @@ AVAILABILITY_NOTICE_WEIGHT = 0.35
 AVAILABILITY_OPEN_TO_WORK_WEIGHT = 0.25
 AVAILABILITY_RECENCY_DECAY_DAYS = 90.0
 NOTICE_GRACE_PERIOD_DAYS = 30
-NOTICE_PENALTY_SCALE_DAYS = 150.0
+NOTICE_PENALTY_SCALE_DAYS = 80.0
 OPEN_TO_WORK_TRUE_SCORE = 1.0
 OPEN_TO_WORK_FALSE_SCORE = 0.6
 
@@ -280,10 +280,7 @@ JD_HARD_DISQUALIFIER_SCORE = -50.0
 # ---------------------------------------------------------------------------
 # Stage 10: reasoning generation -- shipper-evidence multiplier
 # ---------------------------------------------------------------------------
-# Multi-word phrases, not bare verbs -- "built" or "owned" alone occur too
-# incidentally in ordinary prose to be reliable evidence; a multi-word phrase
-# is materially harder to land on by accident, which is the entire premise
-# of using this as a signal at all.
+
 IMPACT_VERBS = (
     "shipped", "deployed", "architected", "launched",
     "built and shipped", "owned and shipped",

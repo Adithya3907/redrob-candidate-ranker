@@ -11,6 +11,7 @@ primary_contact:
 team_members:
   - name: "Adithya M"
     email: "adithya3907@gmail.com"
+    role: "Solo developer" 
    
 # ============================================================================
 # Code and reproducibility
@@ -19,7 +20,7 @@ github_repo: "https://github.com/Adithya3907/redrob-candidate-ranker"
 
 sandbox_link: "https://redrob-candidate-ranker-adithya3907.streamlit.app" 
 
-reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./YOUR_TEAM_ID.csv"
+reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
 
 # ============================================================================
 # Compute environment

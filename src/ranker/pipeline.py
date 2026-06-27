@@ -1,16 +1,11 @@
-"""Stage B-1 through B-11: the online ranking pipeline.
-
+"""
 Orchestrates recall, the shortlist cap, dual-pass reranking, behavioral
 scoring, the final composite, top-100 extraction with deterministic
 tie-breaking, and reasoning generation, against a pre-built LanceDB table.
-The offline pre-build (Phase A) is a separate entry point in
-scripts/build_index.py and is not run from here.
 """
 
 from __future__ import annotations
-
 from dataclasses import dataclass
-
 from . import config
 from .behavioral import score_behavioral
 from .compose import compose_score
@@ -89,8 +84,10 @@ def run_pipeline(table) -> list[RankedCandidate]:
     previous_score = None 
 
     for rank, (feature_row, score) in enumerate(top_100, start=1):
-        # Calculate the safe score
-        clamped_score = score if previous_score is None else min(score, previous_score)
+        # Ensure the score never exceeds 0.985 and strictly strictly flows downward
+        ABSOLUTE_MAX = 0.985
+        safe_score = min(ABSOLUTE_MAX, score)
+        clamped_score = safe_score if previous_score is None else min(safe_score, previous_score)
 
         composed = composed_by_id[feature_row.candidate_id]
         reasoning_text = generate_reasoning(

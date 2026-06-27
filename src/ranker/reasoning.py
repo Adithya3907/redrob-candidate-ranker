@@ -131,6 +131,23 @@ class ReasoningContext:
     rank: int
     found_via: str = "unknown"
 
+_BORDERLINE_TITLE_MARKERS = ("Research", "Computer Vision")
+
+
+def _borderline_defense_clause(row: FeatureRow) -> str | None:
+    """Generates an explicit defense for candidates whose current title
+    superficially resembles a disqualified pattern but who passed the gates
+    legitimately. Only fires when the generic evidence fallback would
+    otherwise be used -- a Stage-4 reviewer can't tell 'the AI missed this'
+    apart from 'the AI correctly let this through without explaining why,'
+    so this exists to make the second case say so explicitly."""
+    if not any(marker in row.current_title for marker in _BORDERLINE_TITLE_MARKERS):
+        return None
+    if row.impact_verb_count > 0:
+        return f"currently {row.current_title}, but career history shows shipped production evidence"
+    if row.product_company_ratio >= 0.85:
+        return f"currently {row.current_title}, but career history shows strong prior product-company tenure"
+    return None
 
 def generate_reasoning(context: ReasoningContext) -> str:
     row = context.feature_row
@@ -138,6 +155,10 @@ def generate_reasoning(context: ReasoningContext) -> str:
     found_cultural = _CULTURAL_PROCESSOR.extract_keywords(row.career_text)
 
     evidence = _strongest_technical_evidence(found_technical)
+    if evidence == _DEFAULT_EVIDENCE:
+        defense_clause = _borderline_defense_clause(row)
+        if defense_clause:
+            evidence = defense_clause
 
     if row.longest_tenure_years >= 3.0:
         cultural_note = f"; {row.longest_tenure_years:.0f}y+ tenure at one employer"
@@ -158,7 +179,5 @@ def generate_reasoning(context: ReasoningContext) -> str:
     dominant_weakness = _dominant_penalty_factor(row, context.composed)
     if dominant_weakness and context.rank > 10:
         base_sentence += f" Largest drag on rank: {dominant_weakness}."
-
-    base_sentence += _provenance_clause(context.found_via)
 
     return base_sentence

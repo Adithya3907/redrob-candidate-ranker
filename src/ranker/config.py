@@ -287,7 +287,7 @@ IMPACT_VERBS = (
     "released to production", "took to production",
     "drove to launch", "pushed to prod",
 )
-IMPACT_VERB_STEP = 0.0125
+IMPACT_VERB_STEP = 0.05
 IMPACT_VERB_MAX_COUNT = 4            # caps the multiplier at 1.05
 
 # Output contract (Stage 11 / validate_submission.py)

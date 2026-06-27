@@ -114,15 +114,17 @@ a single final number. Copy the printed values into `src/ranker/config.py`,
 replacing the constants marked `\[OPTUNA-TUNED]`. Rationale in
 [ARCHITECTURE.md §6.7](ARCHITECTURE.md#67-weight-tuning-optimizes-ndcg-directly-against-real-production-code).
 
-## Sandbox
+## 🖥️ Sandbox (Live Demo)
 
-```bash
+**🌐 Try the Live UI:** https://redrob-candidate-ranker-adithya3907.streamlit.app/
+
+The hosted sandbox accepts a sample file (JSON/JSONL/CSV/XLSX) of up to 100 candidates. Because of cloud memory constraints, it builds a temporary ephemeral LanceDB index from your uploaded sample alone, and runs the full Phase A + Phase B pipeline live in the browser. It is a working demonstration of the pipeline's logic independent of the full 100K build.
+
+### Run the Sandbox Locally
+If you wish to run the UI on your own machine:
+`bash
 streamlit run sandbox/app.py
-```
-
-Accepts a sample of up to 100 candidates, builds a temporary index from that
-sample alone, and runs the full pipeline against it — a working demonstration
-of the pipeline independent of the full 100K build.
+`
 
 ## Docker
 

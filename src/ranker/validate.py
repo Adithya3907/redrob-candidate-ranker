@@ -1,14 +1,3 @@
-"""Stage B-11: in-pipeline self-check.
-
-Runs immediately after ranking, before rank.py writes the CSV or declares
-success. The hackathon's own validate_submission.py catches the same format
-issues -- but only if someone remembers to run it separately, after the
-fact. Running the equivalent checks inside the pipeline itself means a
-malformed run fails loudly, here, the moment it happens, rather than
-shipping a bad CSV that looks fine until someone else's validator catches
-it later.
-"""
-
 from __future__ import annotations
 
 from . import config

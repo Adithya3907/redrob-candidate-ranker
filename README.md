@@ -129,7 +129,7 @@ If you wish to run the UI on your own machine:
 streamlit run sandbox/app.py
 ```
 
-## 🚀 Stage 3 Reproduction (Docker)
+## 🚀 Reproduction (Docker)
 
 This pipeline uses an **Offline-Build, Online-Rank** architecture to strictly adhere to the 5-minute, CPU-only, and no-network constraints. 
 

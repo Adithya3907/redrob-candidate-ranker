@@ -104,19 +104,13 @@ def write_batches(table, rows: Iterable[dict[str, Any]], batch_size: int = 1000)
 
 
 def build_indexes(table) -> None:
-    print("  building FTS index on career_text...")
-    table.create_fts_index("career_text", replace=True)
-
-    print("  building FTS index on full_text...")
-    table.create_fts_index("full_text", replace=True)
+    print("  building FTS index on career_text and full_text...")
+    
+    # Pass both columns as a list in a single, unified call
+    table.create_fts_index(["career_text", "full_text"], replace=True)
 
     row_count = table.count_rows()
     if row_count >= MIN_ROWS_FOR_VECTOR_INDEX:
-        # Explicit partition/sub-vector counts rather than relying on
-        # auto-defaults: ~sqrt(N) to 4*sqrt(N) partitions is the standard
-        # IVF guideline; 256 sits in that range for ~20K-150K rows. 16
-        # sub-vectors against 384 dims gives 24-dim PQ codebook chunks, a
-        # common split for embeddings at this size.
         print(f"  building IVF_PQ vector index over {row_count} rows "
               "(this is the slow step -- CPU-bound regardless of the "
               "device used for embedding, no GPU acceleration here)...")

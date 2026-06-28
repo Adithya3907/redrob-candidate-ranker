@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 WORKDIR /app
 
@@ -12,15 +12,12 @@ RUN pip install --no-cache-dir -r requirements.txt \
 
 COPY . .
 
-# candidates.jsonl is NOT committed to git (465MB, not original work to
-# redistribute -- see .gitignore) but IS required in the Docker build
-# context: place a local copy at the repo root before running `docker build`.
-# The dataset is identical for every participant and fixed ahead of
-# submission, so baking the embedding/index step in at build time, rather
-# than inside the timed container run, is what makes the online phase fit
-# the 5-minute budget at all -- see ARCHITECTURE.md Section 0 and the
-# Phase A / Phase B split.
+# Build the LanceDB index offline (Phase A)
 RUN python scripts/build_index.py --candidates ./candidates.jsonl
 
+# CRITICAL: Force HuggingFace offline so it doesn't crash during Phase B
+ENV HF_HUB_OFFLINE=1
+
 ENTRYPOINT ["python", "rank.py"]
-CMD ["--candidates", "./candidates.jsonl", "--out", "./submission.csv"]
+# Output MUST be the team name per hackathon rules
+CMD ["--candidates", "./candidates.jsonl", "--out", "./WhiteNoise.csv"]

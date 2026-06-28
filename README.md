@@ -85,7 +85,7 @@ unzip candidates.zip
 python rank.py --candidates ./candidates.jsonl --out ./WhiteNoise.csv
 
 # [Verification Steps]
-# 2. Offline pre-build (takes ~25 mins on GPU if rebuilding artifacts):
+# 2. Offline pre-build (takes ~25 mins on NVIDIA T4 GPU (Kaggle) if rebuilding artifacts):
 #    python scripts/build_index.py --candidates ./candidates.jsonl
 ```
 
@@ -133,7 +133,7 @@ streamlit run sandbox/app.py
 
 This pipeline uses an **Offline-Build, Online-Rank** architecture to strictly adhere to the 5-minute, CPU-only, and no-network constraints. 
 
-Because embedding 100,000 candidates takes ~25 minutes on GPU, the heavy dense embeddings and LanceDB index generation (Phase A) are baked directly into the Docker build step. The timed ranking execution (Phase B) runs entirely offline.
+Because embedding 100,000 candidates takes ~25 minutes on NVIDIA T4 GPU (Kaggle), the heavy dense embeddings and LanceDB index generation (Phase A) are baked directly into the Docker build step. The timed ranking execution (Phase B) runs entirely offline.
 
 ### Prerequisites
 Please ensure the official `candidates.jsonl` (465MB) file is placed in the root directory of this repository before building. It is excluded from version control but required for the build context.

@@ -203,10 +203,11 @@ CE_TIME_BUDGET_CULTURAL_SKIP_FRACTION = 0.60   # skip pass 2 if pass 1 alone use
 # ---------------------------------------------------------------------------
 # Stage 7: behavioral scoring -- 4 super-groups. [OPTUNA-TUNED] placeholders.
 # ---------------------------------------------------------------------------
-BEHAVIORAL_WEIGHT_AVAILABILITY = 0.5644   # [OPTUNA-TUNED] placeholder
-BEHAVIORAL_WEIGHT_RELIABILITY = 0.5996    # [OPTUNA-TUNED] placeholder
-BEHAVIORAL_WEIGHT_MARKET_DEMAND = 0.0598  # [OPTUNA-TUNED] placeholder
-BEHAVIORAL_WEIGHT_PLATFORM_TRUST = 0.2250 # [OPTUNA-TUNED] placeholder
+BEHAVIORAL_WEIGHT_AVAILABILITY = 0.39   # [OPTUNA-TUNED] placeholder
+BEHAVIORAL_WEIGHT_RELIABILITY = 0.41    # [OPTUNA-TUNED] placeholder
+BEHAVIORAL_WEIGHT_MARKET_DEMAND = 0.04  # [OPTUNA-TUNED] placeholder
+BEHAVIORAL_WEIGHT_PLATFORM_TRUST = 0.16  # [OPTUNA-TUNED] placeholder
+
 
 NOTICE_HARD_CLIFF_DAYS = 90
 NOTICE_HARD_CLIFF_MULTIPLIER = 0.65

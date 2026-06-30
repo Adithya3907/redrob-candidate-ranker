@@ -34,7 +34,7 @@ compute:
   uses_gpu_for_inference: false
   has_network_during_ranking: false
   pre_computation_required: true
-  pre_computation_time_minutes: 25 (in NVIDIA T4 GPU (Kaggle))
+  pre_computation_time_minutes: 25
 
 # ============================================================================
 # AI tools declaration

@@ -6,7 +6,7 @@ or any part of the online pipeline -- the output of this script is a small
 set of numbers, copied by hand into config.py once tuning is satisfactory,
 replacing the placeholders marked [OPTUNA-TUNED].
 
-    python research/tune_weights.py --candidates ./candidates.jsonl --trials 200
+    python research/tune_weights.py --candidates ./candidates.jsonl --trials 5000
 """
 
 from __future__ import annotations
@@ -135,6 +135,7 @@ def _default_objective_params() -> dict:
     }
 
 
+
 def score_with_fixed_params(params: dict, precomputed: list[dict]) -> float:
     """Same scoring logic as objective(), but against a fixed parameter
     dict instead of an Optuna trial -- used to compute the baseline."""
@@ -162,11 +163,13 @@ def score_with_fixed_params(params: dict, precomputed: list[dict]) -> float:
             weight_market_demand=w_market,
             weight_platform_trust=w_trust,
         )
+        
         base = final_relevance_weight * ce_score + final_behavioral_weight * behavioral.behavioral_score
-        final_score = (
-            base * row["exp_mult"] * row["pc_mult"] * row["edu_mult"] * row["tenure_mult"] * row["impact_mult"]
-        )
-        final_score = max(0.0, final_score - row["soft_penalty"] * 0.1)
+        raw_penalized = base * row["exp_mult"] * row["pc_mult"] * row["edu_mult"] * row["tenure_mult"]
+        impact_bonus = (1.0 - raw_penalized) * (row["impact_mult"] - 1.0)
+        final_score = raw_penalized + impact_bonus
+        final_score = max(0.0, final_score - row["soft_penalty"] * config.SOFT_PENALTY_SCALE)
+
         predicted_scores.append(final_score)
         true_relevance.append(row["true_relevance"])
 
@@ -204,12 +207,10 @@ def objective(trial: optuna.Trial, precomputed: list[dict]) -> float:
         )
 
         base = final_relevance_weight * ce_score + final_behavioral_weight * behavioral.behavioral_score
-        final_score = (
-            base
-            * row["exp_mult"] * row["pc_mult"] * row["edu_mult"]
-            * row["tenure_mult"] * row["impact_mult"]
-        )
-        final_score = max(0.0, final_score - row["soft_penalty"] * 0.1)
+        raw_penalized = base * row["exp_mult"] * row["pc_mult"] * row["edu_mult"] * row["tenure_mult"]
+        impact_bonus = (1.0 - raw_penalized) * (row["impact_mult"] - 1.0)
+        final_score = raw_penalized + impact_bonus
+        final_score = max(0.0, final_score - row["soft_penalty"] * config.SOFT_PENALTY_SCALE)
 
         predicted_scores.append(final_score)
         true_relevance.append(row["true_relevance"])
@@ -237,8 +238,35 @@ def main() -> None:
     print(f"Best NDCG ({args.trials} Optuna trials): {study.best_value:.4f}")
     print(f"Improvement: {study.best_value - baseline_ndcg:+.4f}")
     print("\nBest params -- copy these into config.py, replacing the [OPTUNA-TUNED] placeholders:")
-    for key, value in study.best_params.items():
-        print(f"  {key} = {value:.4f}")
+    #for key, value in study.best_params.items():
+    #    print(f"  {key} = {value:.4f}")
+    best = study.best_params
+    
+    # 1. Normalize the behavioral weights (so they sum to 1.0)
+    raw_beh = [
+        best["w_availability"], 
+        best["w_reliability"], 
+        best["w_market_demand"], 
+        best["w_platform_trust"]
+    ]
+    total_beh = sum(raw_beh)
+    w_avail, w_rel, w_market, w_trust = [v / total_beh for v in raw_beh]
+    
+    # 2. Calculate the complementary weights
+    ce_tech = best["ce_technical_weight"]
+    ce_cult = 1.0 - ce_tech
+    final_rel = best["final_relevance_weight"]
+    final_beh = 1.0 - final_rel
+    
+    # 3. Print the ACTUAL values for config.py
+    print(f"  CE_TECHNICAL_WEIGHT = {ce_tech:.4f}")
+    print(f"  CE_CULTURAL_WEIGHT = {ce_cult:.4f}")
+    print(f"  BEHAVIORAL_WEIGHT_AVAILABILITY = {w_avail:.4f}")
+    print(f"  BEHAVIORAL_WEIGHT_RELIABILITY = {w_rel:.4f}")
+    print(f"  BEHAVIORAL_WEIGHT_MARKET_DEMAND = {w_market:.4f}")
+    print(f"  BEHAVIORAL_WEIGHT_PLATFORM_TRUST = {w_trust:.4f}")
+    print(f"  FINAL_RELEVANCE_WEIGHT = {final_rel:.4f}")
+    print(f"  FINAL_BEHAVIORAL_WEIGHT = {final_beh:.4f}")
 
 
 if __name__ == "__main__":

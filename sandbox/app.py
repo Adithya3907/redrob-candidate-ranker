@@ -35,8 +35,8 @@ st.caption(
 
 # Added CSV and XLSX to the allowed types
 uploaded = st.file_uploader(
-    "Upload candidates sample", 
-    type=["jsonl", "json", "csv", "xlsx"]
+    "Upload candidates sample (Max 100)", 
+    type=["jsonl", "json"]
 )
 
 if uploaded is not None:
@@ -71,8 +71,9 @@ if uploaded is not None:
         st.stop()
         
     st.write(f"Loaded {total} candidates.")
-    if total > 500:
-        st.warning("⚠️ Large sample detected. The in-memory embedding step may exceed Streamlit's CPU limits.")
+    if total > 101:
+        st.error("⚠️ Spec violation: Sandbox is strictly limited to 101 candidates maximum.")
+        st.stop()
 
     # -------------------------------------------------------------------------
     # Live Progress Bar & Pipeline Execution

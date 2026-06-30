@@ -34,7 +34,7 @@ notice period who hasn't logged in for 3 months is, for hiring purposes, a
 ghost. We apply aggressive, Optuna-tuned mathematical penalties to
 Redrob's behavioral signals (recruiter response rate, recency, notice
 period). Availability dictates rank just as much as capability.
-* **Deterministic Honeypot Assassination.** The dataset contains \~80 subtly
+* **Deterministic Honeypot Assassination.** The dataset contains ~80 subtly
 impossible honeypot profiles. Rather than relying on semantic AI to spot
 these fakes, we use cross-field arithmetic (e.g., claimed tenure > elapsed
 calendar time, or "expert" skills with zero months of usage). Honeypots
@@ -78,7 +78,7 @@ pip install -r requirements.txt
 unzip candidates.zip
 ```
 
-### 🚀 Execute the Pipeline
+### Execute the Pipeline
 
 ```bash
 # 1. Online ranking (the timed, official reproduction command)
@@ -95,11 +95,11 @@ python rank.py --candidates ./candidates.jsonl --out ./WhiteNoise.csv
 |-|-|
 |`rank.py`|Online ranking entry point — the official reproduction command.|
 |`src/ranker/`|Pipeline implementation. One module per stage; see [ARCHITECTURE.md §3](ARCHITECTURE.md#3-building-blocks) for the full stage map.|
-|`scripts/build\_index.py`|Offline pre-build entry point (Phase A).|
-|`research/tune\_weights.py`|Optuna weight tuning against the gold set. Not imported by `rank.py`.|
+|`scripts/build_index.py`|Offline pre-build entry point (Phase A).|
+|`research/tune_weights.py`|Optuna weight tuning against the gold set. Not imported by `rank.py`.|
 |`gold/`|Hand-verified gold set used only by `tune\_weights.py`.|
 |`sandbox/app.py`|Streamlit demo for the required hosted sandbox.|
-|`artifacts/`|Generated LanceDB database. Built by `build\_index.py`, baked into the Docker image.|
+|`artifacts/`|Generated LanceDB database. Built by `build_index.py`, baked into the Docker image.|
 
 Module-level detail for everything under `src/ranker/` — responsibility,
 stage number, and why each one is designed the way it is — is in
@@ -108,7 +108,7 @@ stage number, and why each one is designed the way it is — is in
 ## Weight tuning
 
 ```bash
-python research/tune\_weights.py --candidates ./candidates.jsonl --trials 5000
+python research/tune_weights.py --candidates ./candidates.jsonl --trials 5000
 ```
 
 Optimizes directly against NDCG@k — the metric family the hackathon's own
@@ -117,9 +117,9 @@ a single final number. Copy the printed values into `src/ranker/config.py`,
 replacing the constants marked `\[OPTUNA-TUNED]`. Rationale in
 [ARCHITECTURE.md §6.7](ARCHITECTURE.md#67-weight-tuning-optimizes-ndcg-directly-against-real-production-code).
 
-## 🖥️ Sandbox (Live Demo)
+## Sandbox (Live Demo)
 
-**🌐 Try the Live UI:** https://redrob-candidate-ranker-adithya3907.streamlit.app/
+**Try the Live UI:** https://redrob-candidate-ranker-adithya3907.streamlit.app/
 
 The hosted sandbox accepts a sample file (JSON/JSONL/CSV/XLSX) of up to 100 candidates. Because of cloud memory constraints, it builds a temporary ephemeral LanceDB index from your uploaded sample alone, and runs the full Phase A + Phase B pipeline live in the browser. It is a working demonstration of the pipeline's logic independent of the full 100K build.
 
@@ -129,7 +129,7 @@ If you wish to run the UI on your own machine:
 streamlit run sandbox/app.py
 ```
 
-## 🚀 Reproduction (Docker)
+## Reproduction (Docker)
 
 This pipeline uses an **Offline-Build, Online-Rank** architecture to strictly adhere to the 5-minute, CPU-only, and no-network constraints. 
 
@@ -147,7 +147,7 @@ docker build -t whitenoise-ranker .
 ### Step 2: Run the Ranker (Phase B - Timed Execution)
 *Note: This command strictly enforces the Stage 3 constraints (no network, 16GB RAM, only CPU). It will execute the cross-encoder and output the top 100 CSV within the 5-minute window.*
 ```bash
-docker run --rm --network none --memory="16g" -v $(pwd):/app/output whitenoise-ranker
+docker run --rm --network none --memory="16g" -v $(pwd):/app whitenoise-ranker
 ```
 *The final output will be generated in your local directory as `WhiteNoise.csv`.*
 

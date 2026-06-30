@@ -135,10 +135,10 @@ if uploaded is not None:
     # -------------------------------------------------------------------------
     results_data = [
         {
-            "Rank": r.rank, 
-            "Candidate ID": r.candidate_id, 
-            "Score": round(r.score, 4), 
-            "Reasoning": r.reasoning
+            "candidate_id": r.candidate_id,
+            "rank": r.rank, 
+            "score": round(r.score, 4), 
+            "reasoning": r.reasoning
         } 
         for r in ranked
     ]
